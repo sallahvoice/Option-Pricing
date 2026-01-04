@@ -1,4 +1,5 @@
 def timing(func):
+    
     @wraps(func)
     def decorator(*args, **kwargs):
         start = time.perf_counter()
@@ -22,6 +23,7 @@ class RetryException(Exception):
     pass
 
 def retry(max_attempts: int=4, delay: float=1.0, backoff_factor: float=2.0):
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
