@@ -1,33 +1,69 @@
-import os
-from pathlib import Path
-import mysql.connector
+from contextlib import contextmanager
+from mysql.connector import Error, pooling
 
-load_dotenv()
+from db.config import (
+    host,
+    port,
+    user,
+    password,
+    database,
+    database_pool_size,
+    database_pool_name,
+)
+from logger import get_logger
 
-def run_migration():
-    migrations_dir = Path(__file__).parent/"migrations"
-
-    conn = mysql.connector.connect(
-        host=os.getenv("DB-HOST")
-        port=int(os.getenv("DB-PORT"), 3306),
-        user=os.getenv("DB-USER"),
-        password=os.getenv("DB-PASSWORD"),
-        database=os.getenv("DB-NAME")
-    )
-
-    cursor = conn.cursor()
-
-    for sql_file in sorted(migrations_dir.glob("*.sql")):
-        with open(sql_file) as f:
-            sql_statements = f.read()
-            for result in cursor.excute(sql_statements, multi=true):
-                if result.with_rows:
-                    cursor.fetchall()
-
-    conn.commit()
-    cursor.close()
-    conn.close()
+logger = get_logger(__file__)
 
 
-if __name__ = "__main__":
-    run_migration()
+# pool creation(once, at import time)
+def create_db_pool():
+    try:
+        return pooling.MySQLConnectionPool(
+            pool_name=database_pool_name,
+            pool_size=database_pool_size,
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            database=database,
+        )
+    except Error as e:
+        logger.error("error creating db pool: %s", e)
+        raise
+
+
+_POOL = create_db_pool()
+
+
+class DatabaseConnection:
+    def __init__(self, pool):
+        self.pool = pool
+
+    @contextmanager
+    def get_connection(self):
+        conn = None
+        try:
+            conn = self.pool.get_connection()
+            yield conn
+            conn.commit()
+        except Error as e:
+            if conn:
+                conn.rollback()
+            logger.error("database error: %s", e)
+            raise
+        finally:
+            if conn and conn.is_connected():
+                conn.close()
+
+    @contextmanager
+    def get_cursor(self, dictionary=False):
+        with self.get_connection() as conn:
+            cursor = conn.cursor(dictionary=dictionary)
+            try:
+                yield cursor
+            finally:
+                cursor.close()
+
+
+#singleton exposed to use by repos & migrations
+database = DatabaseConnection(_POOL)

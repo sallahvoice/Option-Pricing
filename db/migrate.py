@@ -1,7 +1,13 @@
 import os
 from pathlib import Path
 import mysql.connector
-from db.config import host, port, user, password, database
+from db.config import (
+    host,
+    port,
+    user,
+    password,
+    database
+)
 
 def run_migration():
     migrations_dir = Path(__file__).parent/"migrations"
