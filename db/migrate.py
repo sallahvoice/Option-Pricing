@@ -8,6 +8,8 @@ from db.config import (
     password,
     database
 )
+from logger import get_logger
+logger = get_logger(__file__)
 
 def run_migration():
     migrations_dir = Path(__file__).parent/"migrations"
@@ -22,12 +24,15 @@ def run_migration():
 
     cursor = conn.cursor()
 
-    for sql_file in sorted(migrations_dir.glob("*.sql")):
-        with open(sql_file) as f:
-            sql_statements = f.read()
-            for result in cursor.execute(sql_statements, multi=True):
-                if result.with_rows:
-                    cursor.fetchall()
+    try:
+        for sql_file in sorted(migrations_dir.glob("*.sql")):
+            with open(sql_file) as f:
+                sql_statements = f.read()
+                for result in cursor.execute(sql_statements, multi=True):
+                    if result.with_rows:
+                        cursor.fetchall()
+    except FileNotFoundError as e:
+        logger.error("file not found: %s", e)
 
     conn.commit()
     cursor.close()

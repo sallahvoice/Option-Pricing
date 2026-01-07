@@ -15,7 +15,7 @@ from logger import get_logger
 logger = get_logger(__file__)
 
 
-# pool creation(once, at import time)
+#pool creation (once, at import time)
 def create_db_pool():
     try:
         return pooling.MySQLConnectionPool(
@@ -65,5 +65,5 @@ class DatabaseConnection:
                 cursor.close()
 
 
-#singleton exposed to use by repos & migrations
+#singleton exposed to migrations & repos
 database = DatabaseConnection(_POOL)

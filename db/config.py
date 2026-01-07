@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
+#default values
 host = os.getenv("DB_HOST")
 port = int(os.getenv("DB_PORT"))
 user = os.getenv("DB_USER")
