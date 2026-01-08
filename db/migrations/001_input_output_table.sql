@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS BlackScholesInputs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY (CalculationId)
+    INDEX idx_bs_inputs_expiry (TimeToExpiry),
+    INDEX idx_bs_inputs_vol (Volatility)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS BlackScholesOutputs (
