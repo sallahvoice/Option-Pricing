@@ -3,7 +3,7 @@ from numpy import exp, sqrt, log
 from scipy.stats import norm
 
 from exceptions import QueryError
-from repositories.input_repo import InputRepository
+from db.repositories.input_repo import InputRepository
 from db.migrate import run_migration
 from logger import get_logger
 
