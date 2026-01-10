@@ -1,57 +1,100 @@
-from exceptions import (FailedToFetchData, TickerNotFound, QueryError)
-from db.migrate import run_migration
-from repositories.input_repo import InputRepository
-from repositories.output_repo import OutputRepository
-from logger import get_logger
 from typing import Dict
 from numpy import exp, sqrt, log
 from scipy.stats import norm
 
-logger = get_logger(__file__)
-run_migration()
+from exceptions import QueryError
+from repositories.input_repo import InputRepository
+from db.migrate import run_migration
+from logger import get_logger
 
-def input_table_entry(inputs: Dict[str, float]): #includes stock price, vol..
-    if not InputRepository:
-        logger.error("failed to import class InputRepository")
-    input_repo = InputRepository()
-    if not input_repo:
-        logger.error("failed to initialize object from class InputRepository")
-    input_repo.create_input(inputs)
+logger = get_logger(__file__)
+
+
+def input_table_entry(current_inputs: Dict[str, float]):
+    try:
+        repo = InputRepository()
+        repo.create_input(current_inputs)
+    except Exception as e:
+        logger.error(f"Failed to insert inputs: {e}")
+        raise
+
 
 def price_option(inputs: Dict[str, float]):
-    #shock?, sentivize
-    stock_price = inputs["StockPrice"]
-    strike_price = inputs["StrikePrice"]
-    time = inputs["TimeToExpiry"]
-    rf = inputs["RiskFreeRate"]
-    vol = inputs["Volatility"] #std
+    try:
+        S = inputs["StockPrice"]
+        K = inputs["StrikePrice"]
+        T = inputs["TimeToExpiry"]
+        r = inputs["RiskFreeRate"]
+        sigma = inputs["Volatility"]
+    except KeyError as e:
+        raise QueryError(f"Missing input: {e}")
 
-    d1 = (log(stock_price / strike_price) 
-        + (rf + 0.5 * vol**2) * time) / (vol * sqrt(time))
+    if T <= 0 or sigma <= 0:
+        raise QueryError("TimeToExpiry and Volatility must be positive")
 
-    d2 = d1 - vol * sqrt(time)
+    d1 = (log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * sqrt(T))
+    d2 = d1 - sigma * sqrt(T)
 
-    call_price = (
-        stock_price * norm.cdf(d1)
-        - strike_price * exp(-rf * time) * norm.cdf(d2)
-    )
+    Nd1  = norm.cdf(d1)
+    Nd2  = norm.cdf(d2)
+    Nmd1 = norm.cdf(-d1)
+    Nmd2 = norm.cdf(-d2)
+    nd1  = norm.pdf(d1)
 
-    put_price = (
-        strike_price * exp(-rf * time) * norm.cdf(-d2)
-        - stock_price * norm.cdf(-d1)
-    )
+    call_price = S * Nd1 - K * exp(-r * T) * Nd2
+    put_price  = K * exp(-r * T) * Nmd2 - S * Nmd1
 
-    call_delta = norm.cdf(d1)
-    put_delta = norm.cdf(d1) - 1
+    call_delta = Nd1
+    put_delta  = Nd1 - 1
 
-    call_gamma = norm.pdf(d1)/(stock_price*vol*sqrt(time_to_expiry))
-    put_gamma = call_gamma
+    gamma = nd1 / (S * sigma * sqrt(T))
+
+    return {
+        "call_price": call_price,
+        "put_price": put_price,
+        "call_delta": call_delta,
+        "put_delta": put_delta,
+        "call_gamma": gamma,
+        "put_gamma": gamma,
+    }
+
+
+def entry_price(entry_inputs: Dict[str, float]):
+    prices = price_option(entry_inputs)
+    return {
+        "call_entry": prices["call_price"],
+        "put_entry": prices["put_price"],
+    }
+
+
+def pnl(current_inputs: Dict[str, float], entry_inputs: Dict[str, float]):
+    entry = entry_price(entry_inputs)
+    current = price_option(current_inputs)
+
+    return {
+        "call_pnl": current["call_price"] - entry["call_entry"],
+        "put_pnl": current["put_price"] - entry["put_entry"],
+    }
+
 
 if __name__ == "__main__":
-    inputs = {"StockPrice": 50,
-            "StrikePrice": 40,
-            "TimeToExpiry": 2.5,
-            "RiskFreeRate": 0.04,
-            "Volatility": 0.4}
-    price_option(inputs)
-    
+    run_migration()
+
+    entry_inputs = {
+        "StockPrice": 50,
+        "StrikePrice": 40,
+        "TimeToExpiry": 2.5,
+        "RiskFreeRate": 0.04,
+        "Volatility": 0.4,
+    }
+
+    current_inputs = {
+        "StockPrice": 45,
+        "StrikePrice": 40,
+        "TimeToExpiry": 2.0,
+        "RiskFreeRate": 0.04,
+        "Volatility": 0.35,
+    }
+
+    print(entry_price(entry_inputs))
+    print(pnl(current_inputs, entry_inputs))
