@@ -141,3 +141,38 @@ outputs = output_repo.find_by_id(calc_id)
 - **Database Engine**: Centralized connection management with context managers for safe cursor handling
 - **Migration System**: SQL-based migrations for version-controlled database schema evolution
 - **Logging**: Centralized logging for debugging and monitoring
+
+
+
+#TODO LIST:
+1. Greeks Visualization Dashboard 📈
+Difficulty: Medium
+
+Add interactive line charts showing how Greeks (Delta, Gamma, Vega, Theta, Rho) change with:
+
+Varying spot prices
+Time to expiration (decay curves)
+Volatility changes
+
+
+Use Plotly for interactive hover tooltips
+Impact: Helps users understand option sensitivities visually
+
+2. Option Strategy Builder 🎯
+Difficulty: Medium-Hard
+
+Let users combine multiple options (spreads, straddles, butterflies, iron condors)
+Show combined PnL profiles
+Calculate max profit/loss, breakeven points
+Save and compare different strategies
+Impact: Transforms from single-option calculator to full strategy tool
+
+3. Historical Volatility Calculator 📊
+Difficulty: Medium
+
+Integrate with free API (Yahoo Finance, Alpha Vantage)
+Fetch real stock prices
+Calculate historical volatility (20-day, 30-day, etc.)
+Auto-populate volatility field with real data
+Show volatility percentile vs historical range
+Impact: Adds real market data integration
