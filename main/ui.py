@@ -112,8 +112,7 @@ def plot_pnl_heatmap(pnl_matrix: np.ndarray, spot_range: np.ndarray,
     
 
     from matplotlib.colors import LinearSegmentedColormap
-    colors = [
-    '#d73027', '#fc8d59', '#fee090', '#e0f3f8', '#91bfdb', '#4575b4', '#1a9850']
+    colors = ['#eb3349', '#f45c43', '#ff9a76', '#ffe5d9', '#d4edda', '#38ef7d', '#11998e']
     n_bins = 100
     cmap = LinearSegmentedColormap.from_list('trading', colors, N=n_bins)
 
