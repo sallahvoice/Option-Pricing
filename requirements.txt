@@ -1,0 +1,8 @@
+streamlit
+pandas
+matplotlib
+scipy
+seaborn
+numpy
+python-dotenv
+mysql-connector-python

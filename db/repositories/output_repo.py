@@ -15,7 +15,7 @@ class OutputRepository(BaseRepository):
         values = [tuple(row.values()) for row in rows]
 
         with database.get_cursor() as cursor:
-            cursor.executemany(query, (values))
+            cursor.executemany(query, values)
             return cursor.rowcount
     
     def get_one_row_by_input(self, calculation_output_id: int):
