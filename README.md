@@ -144,6 +144,13 @@ outputs = output_repo.find_by_id(calc_id)
 
 
 
+issue:
+#failed to save result to database
+#recent calculations
+
+enhancements:
+#store min, max, avg, count of inputs & outputs
+
 #TODO LIST:
 1. Greeks Visualization Dashboard 📈
 Difficulty: Medium

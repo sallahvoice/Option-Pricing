@@ -5,7 +5,7 @@ from typing import Dict, List
 
 class OutputRepository(BaseRepository):
     def __init__(self):
-        super().__init__("BlackScholesoutputs", pk_column="CalculationOutputId")
+        super().__init__("BlackScholesOutputs", pk_column="CalculationOutputId")
 
     def create_outputs_batch(self, calculation_id: int, rows : List[Dict]):
         columns = ", ".join(rows[0].keys())
