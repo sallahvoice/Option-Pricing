@@ -182,6 +182,30 @@ def save_calculation_to_db(entry_inputs: Dict, spot_range: np.ndarray,
 
 
 with st.sidebar:
+    st.markdown("---")
+    st.markdown("**Created by:** Salah Eddine Bekkari")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(
+            f'<a href="https://www.linkedin.com/in/salah-eddine-bekkari-51b588367/" target="_blank">'
+            f'<img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="30" height="30" style="vertical-align: middle;"> LinkedIn</a>',
+            unsafe_allow_html=True
+        )
+    with col2:
+        st.markdown(
+            f'<a href="https://github.com/sallahvoice" target="_blank">'
+            f'<img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="30" height="30" style="vertical-align: middle;"> GitHub</a>',
+            unsafe_allow_html=True
+        )
+    st.markdown("---")
+    
+    st.title("📈 Black-Scholes PnL")
+    st.write("Options Pricing & Analysis")
+    
+    st.markdown("---")
+    st.subheader("Entry Position Parameters")
+    
     st.title("📈 Black-Scholes PnL")
     st.write("Options Pricing & Analysis")
     
@@ -281,17 +305,6 @@ with st.sidebar:
     
     st.markdown("---")
     save_to_db = st.checkbox("Save to Database", value=False)
-    
-    st.markdown("---")
-    st.write("`Created by:`")
-    st.markdown("**[sallahvoice]**")
-    linkedin_url = "https://www.linkedin.com/in/salah-eddine-bekkari-51b588367/"
-    github_url = "https://github.com/sallahvoice"
-    st.markdown(
-        f'<a href="{linkedin_url}" target="_blank">LinkedIn</a> | '
-        f'<a href="{github_url}" target="_blank">GitHub</a>',
-        unsafe_allow_html=True
-    )
 
 
 st.title("Black-Scholes Option Pricing & PnL Analysis")
@@ -308,11 +321,9 @@ entry_inputs = {
     "Volatility": volatility,
 }
 
-# Calculate entry prices and Greeks
 try:
     entry_prices = price_option(entry_inputs)
     
-    # Display Entry Position Metrics
     st.markdown("### 📊 Entry Position Valuation")
     
     col1, col2, col3, col4 = st.columns(4)
@@ -363,7 +374,6 @@ try:
     
     st.markdown("---")
     
-    # PnL Heatmap Analysis
     st.markdown("### 🔥 PnL Scenario Analysis")
     st.info(
         "Explore how your position's Profit & Loss changes across different spot prices "
@@ -379,7 +389,6 @@ try:
         call_pnl_matrix = generate_pnl_heatmap(entry_inputs, spot_range, vol_range, 'call')
         put_pnl_matrix = generate_pnl_heatmap(entry_inputs, spot_range, vol_range, 'put')
     
-    # Display heatmaps side by side
     col1, col2 = st.columns(2)
     
     with col1:
