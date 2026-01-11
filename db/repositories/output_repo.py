@@ -36,8 +36,11 @@ class OutputRepository(BaseRepository):
     def get_outputs_by_scenario(
         self, calculation_id: int, vol_shock: float, stock_shock: float
     ):
-        query = f"SELECT * FROM {self.table} WHERE CalculationId = %s
-        AND VolatilityShock = %s AND StockPriceShock = %s"
+        query = (f"SELECT * FROM {self.table}" 
+        "WHERE CalculationId = %s"
+        "AND VolatilityShock = %s"
+        "AND StockPriceShock = %s"
+        )
 
         with database.get_cursor(dictionary=True) as cursor:
             cursor.execute(query, (calculation_id, vol_shock, stock_shock))
