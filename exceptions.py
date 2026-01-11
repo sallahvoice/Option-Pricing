@@ -3,7 +3,7 @@ class FailedToFetchData(Exception):
         super().__init__(message)
         self.message = message
         self.value = value
-    
+
     def __str__(self) -> str:
         return f"{self.message}, (value : {self.value})"
 
@@ -13,7 +13,7 @@ class TickerNotFound(Exception):
         super().__init__(message)
         self.message = message
         self.value = value
-    
+
     def __str__(self) -> str:
         return f"{self.message}, (value : {self.value})"
 
@@ -23,6 +23,6 @@ class QueryError(Exception):
         super().__init__(message)
         self.message = message
         self.value = value
-    
+
     def __str__(self) -> str:
         return f"{self.message}, (value : {self.value})"

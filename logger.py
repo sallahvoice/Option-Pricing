@@ -3,12 +3,16 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 log_path = Path(__file__).parent / "logs.log"
-log_path.parent.mkdir(parents=True, exist_ok=True) #not needed in this simple project at this moment
+log_path.parent.mkdir(
+    parents=True, exist_ok=True
+)  # not needed in this simple project at this moment
 
 
 def setup_logger(name: str = __name__):
     logger = logging.getLogger(name)
-    logger.propagate = False #stops log records from propagating to parent/root loggers
+    logger.propagate = (
+        False  # stops log records from propagating to parent/root loggers
+    )
     logger.setLevel(logging.INFO)
 
     if not logger.handlers:
@@ -18,7 +22,7 @@ def setup_logger(name: str = __name__):
 
         file_handler = RotatingFileHandler(
             log_path,
-            maxBytes=2 * 1024 * 1024, 
+            maxBytes=2 * 1024 * 1024,
             backupCount=3,
             encoding="utf-8",
         )
