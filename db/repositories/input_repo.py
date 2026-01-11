@@ -1,6 +1,7 @@
-from db.repositories.base_repo import BaseRepository
+from typing import Dict
+
 from db.engine import database
-from typing import Dict, List, Optional
+from db.repositories.base_repo import BaseRepository
 
 
 class InputRepository(BaseRepository):
@@ -9,14 +10,14 @@ class InputRepository(BaseRepository):
 
     def create_input(self, inputs: Dict[str, float]):
         columns = ", ".join(inputs.keys())
-        placeholders = ", ".join(["%s"]*len(inputs))
+        placeholders = ", ".join(["%s"] * len(inputs))
         query = f"INSERT INTO {self.table} ({columns}) VALUES ({placeholders})"
 
         with database.get_cursor() as cursor:
             cursor.execute(query, tuple(inputs.values()))
             return cursor.lastrowid
 
-    def list_recent_inputs(self, limit: int=5):
+    def list_recent_inputs(self, limit: int = 5):
         query = f"SELECT * FROM {self.table} ORDER BY created_at DESC LIMIT %s"
 
         with database.get_cursor(dictionary=True) as cursor:

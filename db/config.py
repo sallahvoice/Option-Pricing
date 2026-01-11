@@ -1,8 +1,9 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
-#default values
+# default values
 host = os.getenv("DB_HOST")
 port = int(os.getenv("DB_PORT", "3306"))
 user = os.getenv("DB_USER")

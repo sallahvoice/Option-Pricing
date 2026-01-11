@@ -1,21 +1,15 @@
 from contextlib import contextmanager
+
 from mysql.connector import Error, pooling
 
-from db.config import (
-    host,
-    port,
-    user,
-    password,
-    database,
-    database_pool_size,
-    database_pool_name,
-)
+from db.config import (database, database_pool_name, database_pool_size, host,
+                       password, port, user)
 from logger import get_logger
 
 logger = get_logger(__file__)
 
 
-#pool creation (once, at import time)
+# pool creation (once, at import time)
 def create_db_pool():
     try:
         return pooling.MySQLConnectionPool(
@@ -65,5 +59,5 @@ class DatabaseConnection:
                 cursor.close()
 
 
-#singleton exposed to migrations & repos
+# singleton exposed to migrations & repos
 database = DatabaseConnection(_POOL)

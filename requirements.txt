@@ -6,3 +6,6 @@ seaborn
 numpy
 python-dotenv
 mysql-connector-python
+isort
+black
+pylint

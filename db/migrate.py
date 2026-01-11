@@ -1,18 +1,15 @@
-import os
 from pathlib import Path
+
 import mysql.connector
-from db.config import (
-    host,
-    port,
-    user,
-    password,
-    database
-)
+
+from db.config import database, host, password, port, user
 from logger import get_logger
+
 logger = get_logger(__file__)
 
+
 def run_migration():
-    migrations_dir = Path(__file__).parent/"migrations"
+    migrations_dir = Path(__file__).parent / "migrations"
     sql_file = migrations_dir / "001_input_output_table.sql"
 
     conn = mysql.connector.connect(
@@ -32,7 +29,7 @@ def run_migration():
                 statement = statement.strip()
                 if statement:
                     cursor.execute(statement)
-            logger.info(f"Completed migration: {sql_file.name}")
+            logger.info("Completed migration: %s", sql_file.name)
     except FileNotFoundError as e:
         logger.error("file not found: %s", e)
         raise

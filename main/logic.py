@@ -1,10 +1,11 @@
 from typing import Dict
-from numpy import exp, sqrt, log
+
+from numpy import exp, log, sqrt
 from scipy.stats import norm
 
-from exceptions import QueryError
-from db.repositories.input_repo import InputRepository
 from db.migrate import run_migration
+from db.repositories.input_repo import InputRepository
+from exceptions import QueryError
 from logger import get_logger
 
 logger = get_logger(__file__)
@@ -35,17 +36,17 @@ def price_option(inputs: Dict[str, float]):
     d1 = (log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * sqrt(T))
     d2 = d1 - sigma * sqrt(T)
 
-    Nd1  = norm.cdf(d1)
-    Nd2  = norm.cdf(d2)
+    Nd1 = norm.cdf(d1)
+    Nd2 = norm.cdf(d2)
     Nmd1 = norm.cdf(-d1)
     Nmd2 = norm.cdf(-d2)
-    nd1  = norm.pdf(d1)
+    nd1 = norm.pdf(d1)
 
     call_price = S * Nd1 - K * exp(-r * T) * Nd2
-    put_price  = K * exp(-r * T) * Nmd2 - S * Nmd1
+    put_price = K * exp(-r * T) * Nmd2 - S * Nmd1
 
     call_delta = Nd1
-    put_delta  = Nd1 - 1
+    put_delta = Nd1 - 1
 
     gamma = nd1 / (S * sigma * sqrt(T))
 
