@@ -49,7 +49,14 @@ def price_option(inputs: Dict[str, float]):
     put_delta = Nd1 - 1
 
     gamma = nd1 / (S * sigma * sqrt(T))
-    #theta, vega, row?
+
+    call_theta = (-(S * nd1 * sigma)/(2 * sqrt(T))) - (r * K * exp(-r * T) * Nd2)
+    put_theta = (-(S * nd1 * sigma)/(2 * sqrt(T))) + (r * K * exp(-r * T) * Nmd2)
+
+    vega = S * sqrt(T) * nd1
+
+    call_rho = K * T * exp(-r * T) * Nd2
+    put_rho =  -(K * T * exp(-r * T) * Nmd2)
 
     return {
         "call_price": call_price,
