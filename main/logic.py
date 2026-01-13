@@ -65,6 +65,11 @@ def price_option(inputs: Dict[str, float]):
         "put_delta": put_delta,
         "call_gamma": gamma,
         "put_gamma": gamma,
+        "call_theta": call_theta,
+        "put_theta": put_theta,
+        "vega": vega,
+        "call_rho": call_rho,
+        "put_rho": put_rho,
     }
 
 
