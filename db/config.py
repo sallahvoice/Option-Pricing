@@ -1,3 +1,4 @@
+"""database credentials loaded from .env file, used to avoid exposing env vars on each file that utilizes it"""
 import os
 
 from dotenv import load_dotenv
