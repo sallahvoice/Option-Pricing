@@ -396,11 +396,16 @@ try:
     # Greeks table
     st.markdown("### 📐 Greeks")
     greeks_data = {
-        "Metric": ["Call Delta", "Put Delta", "Gamma (Both)"],
+        "Metric": ["Call Delta", "Put Delta", "Gamma (Both)", "call theta", "put theta", "vega", "call rho", "put rho"],
         "Value": [
             f"{entry_prices['call_delta']:.6f}",
             f"{entry_prices['put_delta']:.6f}",
             f"{entry_prices['call_gamma']:.6f}",
+            f"{entry_prices['call_theta']:.6f}",
+            f"{entry_prices['put_theta']:.6f}",
+            f"{entry_prices['vega']:.6f}",
+            f"{entry_prices['call_rho']:.6f}",
+            f"{entry_prices['put_rho']:.6f}"
         ],
     }
     st.table(pd.DataFrame(greeks_data))
