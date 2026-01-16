@@ -1,3 +1,4 @@
+"""the UI for our app, uses streamlit, generates heat maps & runs migrations.."""
 import sys
 from pathlib import Path
 from typing import Dict
@@ -10,7 +11,7 @@ import streamlit as st
 
 # Add parent directory to path to import modules
 sys.path.append(str(Path(__file__).parent.parent))
-
+from decorators import retry
 from db.migrate import run_migration
 from db.repositories.input_repo import InputRepository
 from db.repositories.output_repo import OutputRepository
@@ -159,7 +160,7 @@ def plot_pnl_heatmap(
     plt.tight_layout()
     return fig
 
-
+@retry
 def save_calculation_to_db(
     entry_inputs: Dict, spot_range: np.ndarray, vol_range: np.ndarray
 ):
@@ -396,16 +397,16 @@ try:
     # Greeks table
     st.markdown("### 📐 Greeks")
     greeks_data = {
-        "Metric": ["Call Delta", "Put Delta", "Gamma (Both)", "call theta", "put theta", "vega", "call rho", "put rho"],
+        "Metric": ["Call Delta", "Put Delta", "Gamma", "call theta", "put theta", "vega", "call rho", "put rho"],
         "Value": [
             f"{entry_prices['call_delta']:.6f}",
             f"{entry_prices['put_delta']:.6f}",
             f"{entry_prices['call_gamma']:.6f}",
-            f"{entry_prices['call_theta']:.6f}",
-            f"{entry_prices['put_theta']:.6f}",
-            f"{entry_prices['vega']:.6f}",
-            f"{entry_prices['call_rho']:.6f}",
-            f"{entry_prices['put_rho']:.6f}"
+            f"{entry_prices['call_theta_daily']:.6f}",
+            f"{entry_prices['put_theta_daily']:.6f}",
+            f"{entry_prices['vega_1pct']:.6f}",
+            f"{entry_prices['call_rho_1pct']:.6f}",
+            f"{entry_prices['put_rho_1pct']:.6f}"
         ],
     }
     st.table(pd.DataFrame(greeks_data))
