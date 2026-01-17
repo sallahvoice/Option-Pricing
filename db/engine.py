@@ -1,3 +1,6 @@
+"""file that defines pooling, cursor & connection, creates an object that
+will be imported by other files"""
+
 from contextlib import contextmanager
 
 from mysql.connector import Error, pooling
