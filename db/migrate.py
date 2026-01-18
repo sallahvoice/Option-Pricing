@@ -1,3 +1,4 @@
+"""this file run the sql migrations in db/migrations"""
 from pathlib import Path
 
 import mysql.connector
