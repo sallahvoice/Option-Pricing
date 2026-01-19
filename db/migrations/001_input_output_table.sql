@@ -1,3 +1,5 @@
+"""file that creates mysql tables for our blackscholes inputs & outputs"""
+
 CREATE TABLE IF NOT EXISTS BlackScholesInputs (
     CalculationId INT NOT NULL AUTO_INCREMENT,
     StockPrice DECIMAL(18,8) NOT NULL,
