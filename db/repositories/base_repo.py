@@ -1,3 +1,5 @@
+"""file with base class that has attrs table name & primary key, basic CRUD operations"""
+
 from db.engine import database
 
 
