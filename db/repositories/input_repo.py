@@ -1,3 +1,5 @@
+"""a file that defines a child class (inputrepo), has basic queries for the blackscholes input table"""
+
 from typing import Dict
 
 from db.engine import database
