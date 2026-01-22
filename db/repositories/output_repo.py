@@ -1,3 +1,4 @@
+"""a file that defines a child class (outputrepo), has basic queries for the blackscholes output table"""
 from typing import Dict, List
 
 from db.engine import database
