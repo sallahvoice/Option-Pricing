@@ -1,3 +1,5 @@
+"""file dedicated to custom decorators (time, singlton, retry)"""
+
 def timing(func):
 
     @wraps(func)
