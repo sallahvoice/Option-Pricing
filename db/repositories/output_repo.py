@@ -61,7 +61,29 @@ class OutputRepository(BaseRepository):
             cursor.execute(query, (calculation_id,))
             return cursor.rowcount
 
+    def get_outputs_stats(self, calculation_id: int, column_name: str):
+        allowed_columns = {
+            "VolatilityShock",
+            "StockPriceShock",
+            "OptionPrice",
+        }
 
-# delete_outputs_by_scenario(calculation_id: int, vol_shock: float, stock_shock: float)
-#(min, max, avg, count of outputs given a calc id)
+        if column_name not in allowed_columns:
+            raise ValueError("invalid column name")
+
+        query = f"""
+                SELECT
+                    MIN({column_name}) AS min_val,
+                    MAX({column_name}) AS max_val,
+                    AVG({column_name}) AS avg_val,
+                    COUNT(*) AS total_rows
+                FROM {self.table}
+                WHERE CalculationId = %s
+            """
+
+        with database.get_cursor(dictionary=True) as cursor:
+            cursor.execute(query, (calculation_id,))
+            return cursor.fetchone()
+
+
 # aggregate_option_prices_by_input(calculation_id: int)
