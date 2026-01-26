@@ -1,3 +1,5 @@
+"""a file that configures a custom logger for better error output (format, levels..)"""
+
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
