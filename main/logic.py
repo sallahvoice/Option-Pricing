@@ -1,3 +1,5 @@
+"""a file that prices put/call options based on basic"""
+
 from typing import Dict
 
 from numpy import exp, log, sqrt
@@ -5,6 +7,7 @@ from scipy.stats import norm
 
 from db.migrate import run_migration
 from db.repositories.input_repo import InputRepository
+from decorators import time
 from exceptions import QueryError
 from logger import get_logger
 
@@ -19,7 +22,7 @@ def input_table_entry(current_inputs: Dict[str, float]):
         logger.error(f"Failed to insert inputs: {e}")
         raise
 
-
+@time
 def price_option(inputs: Dict[str, float]):
     try:
         S = inputs["StockPrice"]
@@ -65,11 +68,19 @@ def price_option(inputs: Dict[str, float]):
         "put_delta": put_delta,
         "call_gamma": gamma,
         "put_gamma": gamma,
-        "call_theta": call_theta,
-        "put_theta": put_theta,
-        "vega": vega,
-        "call_rho": call_rho,
-        "put_rho": put_rho,
+
+        "call_theta_annual": call_theta,
+        "put_theta_annual": put_theta,
+        "call_theta_daily": call_theta/365,
+        "put_theta_daily": put_theta/365,
+
+        "vega_raw": vega,
+        "vega_1pct": vega/100,
+
+        "call_rho_raw": call_rho,
+        "put_rho_raw": put_rho,
+        "call_rho_1pct": call_rho/100,
+        "put_rho_1pct": put_rho/100
     }
 
 
